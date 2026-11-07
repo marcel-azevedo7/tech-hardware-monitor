@@ -34,7 +34,6 @@ def extract_laptop_data(soup):
         # The 'title' attribute often holds the full un-truncated name
         title = title_tag.get("title") if title_tag else "No Title"
         
-        print(f"{title}: {price}")
         laptops.append({"title": title, "price": price})
         
     return laptops

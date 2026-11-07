@@ -1,5 +1,6 @@
 import scraper
 import database
+import exporter
 
 TARGET_URL = "https://webscraper.io/test-sites/e-commerce/allinone/computers/laptops"
 
@@ -30,6 +31,10 @@ def main():
     # Step 4: Save the data using our UPSERT logic
     print("\n--- Step 4: Saving to Database ---")
     database.save_to_database(laptops_data)
+
+    # Step 5: Export the final report
+    print("\n--- Step 5: Generating Excel Dashboard ---")
+    exporter.export_to_excel()
     
     print("\nPipeline execution completed successfully!")
 
