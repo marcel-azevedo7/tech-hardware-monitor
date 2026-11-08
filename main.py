@@ -1,38 +1,47 @@
 import scraper
 import database
 import exporter
+import time
+import random
 
-TARGET_URL = "https://webscraper.io/test-sites/e-commerce/allinone/computers/laptops"
+# Dictionary mapping our categories to their exact URLs
+TARGET_URLS = {
+    "Laptops": "https://webscraper.io/test-sites/e-commerce/allinone/computers/laptops",
+    "Tablets": "https://webscraper.io/test-sites/e-commerce/allinone/computers/tablets",
+    "Phones": "https://webscraper.io/test-sites/e-commerce/allinone/phones/touch"
+}
 
 def main():
-    print("Starting Tech Hardware Price Monitor...\n")
+    print("Starting Multi-Category Hardware Price Monitor...\n")
     
-    # Step 1: Ensure the database and tables are ready
     print("--- Step 1: Initializing Database ---")
     database.setup_database()
     
-    # Step 2: Scrape the data from the web
-    print("\n--- Step 2: Scraping Web Data ---")
-    print(f"Fetching data from: {TARGET_URL}")
-    page_soup = scraper.fetch_html(TARGET_URL)
+    # We will collect all items into this master list before saving
+    all_products_data = []
     
-    if not page_soup:
-        print("Failed to retrieve the webpage. Exiting pipeline.")
-        return
-
-    # Step 3: Extract the specific laptop information
-    print("\n--- Step 3: Extracting Product Data ---")
-    laptops_data = scraper.extract_laptop_data(page_soup)
-    
-    if not laptops_data:
-        print("No laptop data found on the page. Exiting pipeline.")
+    print("\n--- Step 2 & 3: Scraping and Extracting Data ---")
+    for category, url in TARGET_URLS.items():
+        print(f"Scraping {category} from: {url}")
+        page_soup = scraper.fetch_html(url)
+        
+        if page_soup:
+            product_data = scraper.extract_product_data(page_soup, category)
+            if product_data:
+                print(f"  -> Extracted {len(product_data)} {category}.")
+                # .extend() adds the new items directly into our master list
+                all_products_data.extend(product_data)
+            
+        # Pauses randomly before requesting the next page
+        time.sleep(random.uniform(1.5, 3.5))
+        
+    if not all_products_data:
+        print("\nNo data found across any categories. Exiting pipeline.")
         return
         
-    # Step 4: Save the data using our UPSERT logic
     print("\n--- Step 4: Saving to Database ---")
-    database.save_to_database(laptops_data)
-
-    # Step 5: Export the final report
+    database.save_to_database(all_products_data)
+    
     print("\n--- Step 5: Generating Excel Dashboard ---")
     exporter.export_to_excel()
     

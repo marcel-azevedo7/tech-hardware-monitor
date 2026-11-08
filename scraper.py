@@ -14,36 +14,38 @@ def fetch_html(url):
         print(f"Error fetching the URL: {e}")
         return None
 
-def extract_laptop_data(soup):
-    """Finds all laptop containers and extracts the title and price from each."""
-    # 1. Find all the parent wrapper containers on the page
+def extract_product_data(soup, category):
+    """Finds all product containers and extracts the category, title, and price."""
     containers = soup.find_all("div", class_="thumbnail")
-    print(f"Found {len(containers)} laptops on this page.\n")
     
-    laptops = []
+    products = []
     
-    # 2. Loop through each container to extract the specific details
     for container in containers:
-        # Find the price tag using the exact tag and class you discovered
         price_tag = container.find("h4", class_="price")
-        # Extract the text and remove any accidental blank spaces
         price = price_tag.text.strip() if price_tag else "No Price"
         
-        # Find the title tag
         title_tag = container.find("a", class_="title")
-        # The 'title' attribute often holds the full un-truncated name
         title = title_tag.get("title") if title_tag else "No Title"
         
-        laptops.append({"title": title, "price": price})
+        # We now tag each dictionary with its specific category
+        products.append({
+            "category": category,
+            "title": title, 
+            "price": price
+        })
         
-    return laptops
+    return products
 
 if __name__ == "__main__":
+    # Test with just laptops to ensure our new category tag works
     target_url = "https://webscraper.io/test-sites/e-commerce/allinone/computers/laptops"
     
     print(f"Fetching data from: {target_url}...")
     page_soup = fetch_html(target_url)
     
     if page_soup:
-        # Pass the downloaded HTML to our new extraction function
-        laptop_data = extract_laptop_data(page_soup)
+        # We pass the category 'Laptops' so the scraper knows what it is extracting
+        product_data = extract_product_data(page_soup, "Laptops")
+        if product_data:
+            print(f"Extracted {len(product_data)} items.")
+            print(f"Example of new data structure: {product_data[0]}")
