@@ -1,6 +1,8 @@
+![Tech Hardware Price Monitor Cover Banner](images/cover_banner.png)
+
 # Tech Hardware Price Monitor (ETL Pipeline)
 
-An automated Data Engineering pipeline that extracts hardware prices from an e-commerce platform, processes the data through a local SQLite database, enriches it with live foreign exchange rates, and generates a formatted, client-ready Excel dashboard.
+An automated Data Engineering pipeline that extracts hardware prices from an e-commerce platform, processes the data through a local SQLite database, enriches it with live foreign exchange rates, and generates a formatted, client-ready Excel report.
 
 ## 🚀 System Architecture
 
@@ -23,6 +25,14 @@ This project follows a modular, microservice-style architecture separated into d
 ## 📊 Business Value
 
 This pipeline demonstrates how to solve the classic "E-Commerce Competitor Monitoring" problem. Instead of relying on manual data entry, the script automates the ingestion of hundreds of SKUs, normalizes the data, completely prevents duplicate records via SQL constraints, and outputs a formatted multi-sheet `.xlsx` report that business stakeholders can immediately use for pricing strategy.
+
+## 📸 Pipeline Execution & Output
+
+### Terminal Run (Multi-Category Extraction & SQLite UPSERT)
+![Pipeline Execution](images/pipeline_execution.png)
+
+### Formatted Multi-Sheet Excel Report
+![Final Excel Report](images/final_report.png)
 
 ## ⚙️ How to Run
 

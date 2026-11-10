@@ -41,7 +41,7 @@ def export_to_excel():
         print("Could not fetch live rates. Exporting USD only.")
         return 
     
-    filename = "report/international_pricing_report.xlsx"
+    filename = "report/tech_hardware_prices.xlsx"
     print("Generating multi-sheet Excel workbook...")
     
     # Use ExcelWriter to handle multiple sheets
